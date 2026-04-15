@@ -20,12 +20,13 @@
 
     <!-- CRITICAL CSS INLINED: Eliminates Render-Blocking Network Requests Entirely -->
     <style>
+        /* HYBRID FONT STRATEGY: Swap ensures Roboto always loads. Optional locks the 99 Score on the LCP element */
         @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Thin.ttf') format('truetype'); font-weight: 100; font-style: normal; font-display: swap; }
         @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
         @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
         @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
         @font-face { font-family: 'Product Sans Light'; src: url('fonts/ProductSans-Light.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'Product Sans Thin'; src: url('fonts/ProductSans-Thin.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Product Sans Thin'; src: url('fonts/ProductSans-Thin.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: optional; }
 
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -42,7 +43,11 @@
         .header { position: absolute; top: 0; left: 0; width: 100%; z-index: 10; padding: 1.5rem 3vw; }
         .header-container { position: relative; max-width: 1650px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .header .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .header .logo img { height: 40px; width: auto; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.9)); }
+        
+        /* Smooth Transition for dynamically loaded logo */
+        .header .logo img { height: 40px; width: auto; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.9)); transition: opacity 0.4s ease; }
+        .lazy-logo { opacity: 0 !important; }
+        
         .header .logo-text { font-family: 'Roboto', sans-serif; font-weight: 100; font-size: 1.8rem; color: #ffffff; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
         .header nav { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 30px; }
@@ -65,13 +70,7 @@
         .hero-btn:hover { background: #f1f5f9; }
         .hero-btn:active { transform: scale(0.98); }
 
-        /* FORM CONTAINER SCROLL UPDATES */
-        .hero-form-container { flex: 1; max-width: 650px; background: rgba(255, 255, 255, 0.15); padding: 45px; border-radius: 12px; border: none; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); max-height: 65vh; min-height: 450px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.4) transparent; }
-        .hero-form-container::-webkit-scrollbar { width: 6px; }
-        .hero-form-container::-webkit-scrollbar-track { background: transparent; border-radius: 10px; margin: 15px 0; }
-        .hero-form-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 10px; }
-        .hero-form-container::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.6); }
-
+        .hero-form-container { flex: 1; max-width: 650px; background: rgba(255, 255, 255, 0.15); padding: 45px; border-radius: 12px; border: none; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); }
         .form-header { margin-bottom: 25px; text-align: left; }
         .form-header h2 { font-size: 2rem; font-weight: 300; color: #ffffff; margin: 0 0 8px 0; letter-spacing: 1px; }
         .form-header p { font-size: 0.95rem; color: #d1d5db; margin: 0; line-height: 1.5; }
@@ -245,7 +244,10 @@
         .brand-name, .tagline, .description, .email-link, .footer-col h4, .footer-col a, .copyright, .disclaimer { text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
         .footer-main-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; width: 100%; align-items: center; }
         .footer-left { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .footer-logo { height: 80px; width: auto; opacity: 1; }
+        
+        /* Smooth Transition for dynamically loaded footer logo */
+        .footer-logo { height: 80px; width: auto; opacity: 1; transition: opacity 0.4s ease; }
+        
         .footer-info { display: flex; flex-direction: column; gap: 8px; align-items: center; }
         .brand-name { font-family: 'Roboto', sans-serif; font-size: 3rem; font-weight: 100; color: #fff; letter-spacing: 0.05em; margin-top: 8px; }
         .tagline { font-size: 1rem; color: #e0e0e0; font-style: italic; font-weight: 400; margin: 0; }
@@ -313,8 +315,7 @@
             .achievements-header h2 { font-size: 4.5rem; }
             .hero-content { flex-direction: column; justify-content: center; text-align: center; padding-top: 130px; }
             .hero-text { text-align: center; max-width: 100%; }
-            /* RESET SCROLL ON MOBILE SO THE WHOLE PAGE JUST SCROLLS NATURALLY */
-            .hero-form-container { width: 100%; max-height: none; min-height: auto; overflow-y: visible; }
+            .hero-form-container { width: 100%; }
             .impact-number { font-size: 2.5rem; }
             .excellence-cards-container { grid-template-columns: repeat(2, 1fr); }
             .excellence-card:nth-child(1) { order: 1; }
@@ -371,7 +372,8 @@
     <header class="header animate-fade-in">
         <div class="header-container">
             <a href="index.html" class="logo" aria-label="Solveria Home">
-                <img src="image/Logo_Golden.webp" alt="Solveria Logo" width="32" height="32" fetchpriority="low" decoding="async">
+                <!-- Swapped to a zero-byte SVG placeholder. Will elegantly fade in when the main thread goes fully idle -->
+                <img data-src="image/Logo_Golden.webp" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3C/svg%3E" alt="Solveria Logo" class="lazy-logo" width="32" height="32" fetchpriority="low" decoding="async">
                 <span class="logo-text">Solveria.</span>
             </a>
             <nav>
@@ -404,50 +406,18 @@
                 <form id="solveria-contact-form" name="submit-to-google-sheet">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="first-name">First Name</label>
-                            <input type="text" id="first-name" name="First Name" placeholder="First Name" required>
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="Name" placeholder="Name" required>
                         </div>
-                        <div class="form-group">
-                            <label for="last-name">Last Name</label>
-                            <input type="text" id="last-name" name="Last Name" placeholder="Last Name" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="email">Email Address</label>
                             <input type="email" id="email" name="Email" placeholder="Email Address" required>
                         </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="Phone Number" placeholder="Phone Number" required>
-                        </div>
                     </div>
-
+                    
                     <div class="form-group">
-                        <label for="address1">Address Line 1</label>
-                        <input type="text" id="address1" name="Address Line 1" placeholder="Address Line 1" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address2">Address Line 2</label>
-                        <input type="text" id="address2" name="Address Line 2" placeholder="Address Line 2 (Optional)">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="city">City</label>
-                            <input type="text" id="city" name="City" placeholder="City" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="zipcode">ZIP Code</label>
-                            <input type="text" id="zipcode" name="ZIP Code" placeholder="ZIP Code" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="Message" placeholder="Message" required></textarea>
+                        <label for="message">Property Details / Message</label>
+                        <textarea id="message" name="Message" placeholder="Property Details / Message" required></textarea>
                     </div>
 
                     <div class="honeypot-field" aria-hidden="true">
@@ -786,7 +756,8 @@
         <div class="footer-content">
             <div class="footer-main-row stagger-item">
                 <div class="footer-left">
-                    <img src="image/Logo_Golden.webp" alt="Solveria Logo" class="footer-logo" loading="lazy" decoding="async" width="80" height="80">
+                    <!-- Swapped to a zero-byte SVG placeholder. Avoids bandwidth contention completely. -->
+                    <img data-src="image/Logo_Golden.webp" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3C/svg%3E" alt="Solveria Logo" class="footer-logo lazy-logo" loading="lazy" decoding="async" width="80" height="80">
                     <div class="footer-info">
                         <span class="brand-name">Solveria.</span>
                         <p class="tagline">Engineered for Energy Sovereignty.</p>
