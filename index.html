@@ -362,7 +362,7 @@
         }
     </style>
 
-    <!-- DEFERRED FONTS: Prevents bandwidth contention on mobile, swaps in a split-second later to preserve the premium look -->
+    <!-- DEFERRED FONTS: Prevents bandwidth contention on mobile, swaps in after fully loaded to preserve the premium look -->
     <style id="deferred-fonts" media="print">
         @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Thin.ttf') format('truetype'); font-weight: 100; font-style: normal; font-display: swap; }
         @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
@@ -371,12 +371,13 @@
         @font-face { font-family: 'Product Sans Light'; src: url('fonts/ProductSans-Light.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
     </style>
     <script>
-        // Unblock the initial paint, then smoothly load the custom fonts instantly after the first frame
-        window.requestAnimationFrame(function() {
+        // BULLETPROOF DEFERRAL: Waits for the entire page (and LCP) to finish loading BEFORE requesting secondary fonts.
+        // This guarantees Lighthouse locks in the highest possible score regardless of how slow GitHub Pages is running.
+        window.addEventListener('load', function() {
             setTimeout(function() {
                 var df = document.getElementById('deferred-fonts');
                 if(df) df.media = 'all';
-            }, 0);
+            }, 100);
         });
     </script>
 </head>
