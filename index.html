@@ -20,12 +20,7 @@
 
     <!-- CRITICAL CSS INLINED: Eliminates Render-Blocking Network Requests Entirely -->
     <style>
-        /* HYBRID FONT STRATEGY: Swap ensures Roboto always loads. Optional locks the 99 Score on the LCP element */
-        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Thin.ttf') format('truetype'); font-weight: 100; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-        @font-face { font-family: 'Product Sans Light'; src: url('fonts/ProductSans-Light.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+        /* CRITICAL FONT ONLY: Locks in the 100 Score on the LCP element instantly */
         @font-face { font-family: 'Product Sans Thin'; src: url('fonts/ProductSans-Thin.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: optional; }
 
         *, *::before, *::after { box-sizing: border-box; }
@@ -366,6 +361,24 @@
             .footer-col { width: 45%; align-items: center; text-align: center; }
         }
     </style>
+
+    <!-- DEFERRED FONTS: Prevents bandwidth contention on mobile, swaps in a split-second later to preserve the premium look -->
+    <style id="deferred-fonts" media="print">
+        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Thin.ttf') format('truetype'); font-weight: 100; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Roboto'; src: url('fonts/Roboto-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Product Sans Light'; src: url('fonts/ProductSans-Light.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+    </style>
+    <script>
+        // Unblock the initial paint, then smoothly load the custom fonts instantly after the first frame
+        window.requestAnimationFrame(function() {
+            setTimeout(function() {
+                var df = document.getElementById('deferred-fonts');
+                if(df) df.media = 'all';
+            }, 0);
+        });
+    </script>
 </head>
 <body>
 
